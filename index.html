@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEVAUTOMATION - Automatyzacja Procesów Biznesowych</title>
+    <meta name="description" content="Automatyzacja procesów dla małych firm, startupów i klientów indywidualnych. Webhooks, API, inteligentne systemy - zaoszczędź czas i pieniądze!">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #8b5cf6;
+        }
+
+        /* Hero Section with Animation */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid #8b5cf6;
+        }
+
+        .btn-secondary:hover {
+            background: #8b5cf6;
+        }
+
+        /* Animated Flow Visualization */
+        .flow-animation {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-node {
+            position: absolute;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border: 2px solid #8b5cf6;
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .flow-node.start { top: 50px; left: 50px; animation-delay: 0s; }
+        .flow-node.webhook { top: 50px; right: 50px; animation-delay: 0.5s; }
+        .flow-node.process { bottom: 200px; left: 50%; transform: translateX(-50%); animation-delay: 1s; }
+        .flow-node.database { bottom: 50px; left: 50px; animation-delay: 1.5s; }
+        .flow-node.output { bottom: 50px; right: 50px; animation-delay: 2s; }
+
+        .flow-node-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ec4899;
+            border-radius: 50%;
+            animation: moveParticle 3s infinite;
+            box-shadow: 0 0 10px #ec4899;
+        }
+
+        @keyframes moveParticle {
+            0% { top: 70px; left: 150px; opacity: 0; }
+            25% { opacity: 1; }
+            50% { top: 70px; right: 150px; }
+            75% { top: 300px; left: 50%; opacity: 1; }
+            100% { bottom: 70px; left: 150px; opacity: 0; }
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .case-card {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            border-color: #8b5cf6;
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .case-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .case-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+
+        .case-card ul {
+            list-style: none;
+            color: #a0a0a0;
+        }
+
+        .case-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .case-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ec4899;
+            font-weight: bold;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured {
+            border-color: #ec4899;
+            background: linear-gradient(135deg, #2a1a3a, #3a2a4a);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 1rem 0;
+        }
+
+        .price-sub {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 0.7rem 0;
+            color: #a0a0a0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ec4899;
+        }
+
+        /* ROI Calculator */
+        .roi-calculator {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 0.5rem;
+            color: #8b5cf6;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            padding: 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .roi-result {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .roi-result h3 {
+            font-size: 2rem;
+            color: #ec4899;
+            margin-bottom: 1rem;
+        }
+
+        .roi-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #8b5cf6;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none;
+            cursor: pointer;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.5);
+            transition: all 0.3s;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 90px;
+            right: 0;
+            width: 400px;
+            height: 600px;
+            background: #1e1e1e;
+            border-radius: 20px;
+            border: 2px solid #8b5cf6;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .chatbot-window.active {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            padding: 1.5rem;
+            border-radius: 18px 18px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .chatbot-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chatbot-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: messageSlide 0.3s;
+            line-height: 1.5;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            background: rgba(139, 92, 246, 0.2);
+            align-self: flex-start;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .message.user {
+            background: rgba(236, 72, 153, 0.2);
+            align-self: flex-end;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-reply {
+            background: rgba(139, 92, 246, 0.3);
+            border: 1px solid #8b5cf6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .quick-reply:hover {
+            background: #8b5cf6;
+            transform: translateY(-2px);
+        }
+
+        .chatbot-input {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .chatbot-input input::placeholder {
+            color: #666;
+        }
+
+        .chatbot-input button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chatbot-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 1rem;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 15px;
+            max-width: 80px;
+            align-self: flex-start;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+            gap: 5px;
+            animation: messageSlide 0.3s;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-section h4 {
+            color: #8b5cf6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #a0a0a0;
+            text-decoration: none;
+            display: block;
+            padding: 0.3rem 0;
+        }
+
+        .footer-section a:hover {
+            color: #ec4899;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            color: #a0a0a0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .chatbot-window {
+                width: 90vw;
+                right: 5vw;
+            }
+
+            .flow-animation {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">DEVAUTOMATION</div>
+        <ul class="nav-links">
+            <li><a href="#home">Start</a></li>
+            <li><a href="#solutions">Rozwiązania</a></li>
+            <li><a href="#pricing">Cennik</a></li>
+            <li><a href="#calculator">Kalkulator ROI</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Zautomatyzuj Swój Biznes. Oszczędzaj Czas i Pieniądze.</h1>
+                <p>Specjalizujemy się w tworzeniu dedykowanych systemów automatyzacji dla małych firm, startupów i klientów indywidualnych. Dzięki webhookom, API i inteligentnym przepływom danych Twoja firma może działać 24/7 bez dodatkowego wysiłku.</p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary">Umów Bezpłatną Konsultację</a>
+                    <a href="#calculator" class="btn btn-secondary">Oblicz Oszczędności</a>
+                </div>
+            </div>
+
+            <!-- Animated Flow -->
+            <div class="flow-animation">
+                <div class="flow-node start">
+                    <div class="flow-node-icon">📋</div>
+                    <div>Zamówienie</div>
+                </div>
+                <div class="flow-node webhook">
+                    <div class="flow-node-icon">🔗</div>
+                    <div>Webhook</div>
+                </div>
+                <div class="flow-node process">
+                    <div class="flow-node-icon">⚙️</div>
+                    <div>Automatyzacja</div>
+                </div>
+                <div class="flow-node database">
+                    <div class="flow-node-icon">💾</div>
+                    <div>Baza Danych</div>
+                </div>
+                <div class="flow-node output">
+                    <div class="flow-node-icon">📄</div>
+                    <div>Faktura</div>
+                </div>
+                <div class="data-particle"></div>
+                <div class="data-particle" style="animation-delay: 1.5s;"></div>
+                <div class="data-particle" style="animation-delay: 0.7s;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section id="solutions">
+        <h2>Rozwiązania Dla Każdej Branży</h2>
+        <div class="use-cases">
+            <div class="case-card">
+                <div class="case-icon">🪵</div>
+                <h3>Stolarnia / Warsztat</h3>
+                <ul>
+                    <li>Automatyczne przyjmowanie zamówień z formularza/WhatsApp</li>
+                    <li>Generator ofert z cenami materiałów</li>
+                    <li>System przypomnień o terminach realizacji</li>
+                    <li>Automatyczne fakturowanie i rozliczenia</li>
+                    <li>Zarządzanie magazynem materiałów</li>
+                </ul>
+            </div>
+
+            <div class="case-card">
+                <div class="case-icon">💇</div>
+                <h3>Salon Fryzjerski / Beauty</h3>
+                <ul>
+                    <li>Rezerwacje online 24/7 bez telefonu</li>
+                    <li>Automatyczne przypomnienia SMS/Email</li>
+                    <li>Historia wizyt i preferencje klientów</li>
+                    <li>Program lojalnościowy z rabatami</li>
+                    <li>Zarządzanie stanami magazynowymi kosmetyków</li>
+                </ul>
+            </div>
+
+            <div class="case-card">
+                <div class="case-icon">🛒</div>
+                <h3>Sklep Internetowy / E-commerce</h3>
+                <ul>
+                    <li>Automatyczna obsługa zamówień i płatności</li>
+                    <li>Integracja z hurtowniami - aktualizacja cen</li>
+                    <li>Email marketing (do 3000 faktur dziennie)</li>
+                    <li>Zarządzanie zwrotami i reklamacjami</li>
+                    <li>Raporty sprzedażowe w czasie rzeczywistym</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+        <h2>Cennik Dostosowany Do Twoich Potrzeb</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">2490 zł</div>
+                <div class="price-sub">jednorazowo</div>
+                <ul class="features-list">
+                    <li>Dla klientów indywidualnych i startupów</li>
+                    <li>1 główny proces automatyzacji</li>
+                    <li>Integracja z 3 narzędziami</li>
+                    <li>Webhook + formularz kontaktowy</li>
+                    <li>30 dni wsparcia technicznego</li>
+                    <li>Dokumentacja użytkownika</li>
+                </ul>
+                <a href="#contact" class="btn btn-secondary">Wybierz Plan</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <h3>Business</h3>
+                <div class="price">4990 zł</div>
+                <div class="price-sub">+ 299 zł/mies. wsparcie</div>
+                <ul class="features-list">
+                    <li>Dla małych i średnich firm</li>
+                    <li>Do 5 procesów automatyzacji</li>
+                    <li>Integracja z nielimitowaną liczbą narzędzi</li>
+                    <li>Webhooks, API, bazy danych</li>
+                    <li>Aplikacja mobilna (opcjonalnie)</li>
+                    <li>Priorytetowe wsparcie 24/7</li>
+                    <li>Raporty i analityka</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary">Najpopularniejszy</a>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">8990 zł</div>
+                <div class="price-sub">+ 599 zł/mies. wsparcie</div>
+                <ul class="features-list">
+                    <li>Dla firm z rozbudowanymi procesami</li>
+                    <li>Nielimitowane procesy automatyzacji</li>
+                    <li>Dedykowany system CRM</li>
+                    <li>AI i Machine Learning</li>
+                    <li>Integracje custom (ERP, WMS)</li>
+                    <li>Dedykowany opiekun projektu</li>
+                    <li>SLA 99.9% uptime</li>
+                </ul>
+                <a href="#contact" class="btn btn-secondary">Skontaktuj się</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section id="calculator">
+        <h2>Oblicz Swoje Oszczędności</h2>
+        <div class="roi-calculator">
+            <div class="calculator-inputs">
+                <div class="input-group">
+                    <label for="hours">Godzin pracy manualnej tygodniowo:</label>
+                    <input type="number" id="hours" value="20" min="1" max="168">
+                </div>
+                <div class="input-group">
+                    <label for="hourly-rate">Stawka godzinowa (zł):</label>
+                    <input type="number" id="hourly-rate" value="50" min="1">
+                </div>
+                <div class="input-group">
+                    <label for="automation-percent">% procesów do automatyzacji:</label>
+                    <input type="number" id="automation-percent" value="70" min="1" max="100">
+                </div>
+            </div>
+            <div class="roi-result">
+                <h3>Oszczędzisz rocznie:</h3>
+                <div class="roi-number" id="roi-value">36 400 zł</div>
+                <p style="color: #a0a0a0; margin-top: 1rem;">To zwrot z inwestycji w mniej niż 2 miesiące!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact">
+        <h2>Umów Bezpłatną Konsultację</h2>
+        <form class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Imię i Nazwisko / Nazwa Firmy:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefon:</label>
+                <input type="tel" id="phone">
+            </div>
+            <div class="form-group">
+                <label for="business">Rodzaj Działalności:</label>
+                <input type="text" id="business" placeholder="np. stolarnia, salon fryzjerski, e-commerce">
+            </div>
+            <div class="form-group">
+                <label for="message">Opisz swoją sytuację:</label>
+                <textarea id="message" placeholder="Jakie procesy chcesz zautomatyzować?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Wyślij Wiadomość</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>DEVAUTOMATION</h4>
+                <p>Twój partner w automatyzacji procesów biznesowych. Oszczędzaj czas, zwiększaj efektywność.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Kontakt</h4>
+                <p>📞 +49 1521 250 186</p>
+                <p>📞 +48 791 368 767</p>
+                <p>✉️ lukson.lj@gmail.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>Szybkie Linki</h4>
+                <a href="#solutions">Rozwiązania</a>
+                <a href="#pricing">Cennik</a>
+                <a href="#calculator">Kalkulator ROI</a>
+                <a href="#contact">Kontakt</a>
+            </div>
+            <div class="footer-section">
+                <h4>Godziny Pracy</h4>
+                <p>Poniedziałek - Piątek: 9:00 - 18:00</p>
+                <p>Sobota: 10:00 - 14:00</p>
+                <p>Wsparcie online: 24/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DEVAUTOMATION. Wszystkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" id="chatbotToggle">💬</button>
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3>🤖 Asystent DEVAUTOMATION</h3>
+                <button class="chatbot-close" id="chatbotClose">×</button>
+            </div>
+            <div class="chatbot-messages" id="chatMessages">
+                <div class="message bot">
+                    Cześć! 👋 Jestem asystentem DEVAUTOMATION. Jak mogę Ci pomóc w automatyzacji Twojego biznesu?
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość...">
+                <button id="chatSend">Wyślij</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ROI Calculator
+        function calculateROI() {
+            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const rate = parseFloat(document.getElementById('hourly-rate').value) || 0;
+            const percent = parseFloat(document.getElementById('automation-percent').value) || 0;
+            
+            const weeklySavings = hours * rate * (percent / 100);
+            const yearlySavings = weeklySavings * 52;
+            
+            document.getElementById('roi-value').textContent = 
+                new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(yearlySavings);
+        }
+
+        document.getElementById('hours').addEventListener('input', calculateROI);
+        document.getElementById('hourly-rate').addEventListener('input', calculateROI);
+        document.getElementById('automation-percent').addEventListener('input', calculateROI);
+
+        // Contact Form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Dziękujemy za wiadomość! Skontaktujemy się z Tobą w ciągu 24 godzin.');
+            this.reset();
+        });
+
+        // Chatbot Toggle
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const chatbotClose = document.getElementById('chatbotClose');
+
+        chatbotToggle.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('active');
+        });
+
+        chatbotClose.addEventListener('click', () => {
+            chatbotWindow.classList.remove('active');
+        });
+
+        // Demo Chatbot with Smart Responses
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Knowledge Base
+        const responses = {
+            cena: {
+                keywords: ['cena', 'koszt', 'ile', 'cennik', 'płacić', 'zapłacić', 'wydatek'],
+                answers: [
+                    'Oferujemy 3 pakiety:\n\n💼 Starter - 2490 zł (jednorazowo)\n💼 Business - 4990 zł + 299 zł/mies\n💼 Enterprise - 8990 zł + 599 zł/mies\n\nKtóry pakiet Cię interesuje?',
+                    'Nasze ceny są o 30-40% niższe od konkurencji! 🎉\n\nStarter: 2490 zł - idealny dla klientów indywidualnych\nBusiness: 4990 zł - najpopularniejszy dla małych firm\nEnterprise: 8990 zł - dla dużych organizacji\n\nChcesz poznać szczegóły?'
+                ],
+                quickReplies: ['Starter', 'Business', 'Enterprise', 'Porównaj pakiety']
+            },
+            stolarz: {
+                keywords: ['stolarz', 'stolarnia', 'warsztat', 'meble', 'drewno'],
+                answers: [
+                    'Dla stolarni automatyzujemy:\n\n✅ Przyjmowanie zamówień przez formularz/WhatsApp\n✅ Generowanie ofert z cenami materiałów\n✅ Przypomnienia o terminach\n✅ Automatyczne fakturowanie\n✅ Zarządzanie magazynem\n\nOszczędzasz minimum 15h/tydzień! ⏰',
+                    'Świetny wybór! 🪵 Dla stolarni mamy gotowe rozwiązanie:\n\n📋 Automatyczne zamówienia\n💰 Kalkulacja kosztów materiałów\n⏰ System przypomnień\n📄 E-faktury\n\nCzas realizacji: 2 tygodnie. Umówić konsultację?'
+                ],
+                quickReplies: ['Umów konsultację', 'Jaki koszt?', 'Case study']
+            },
+            fryzjer: {
+                keywords: ['fryzjer', 'salon', 'beauty', 'kosmetyk', 'wizyta'],
+                answers: [
+                    'Dla salonu beauty automatyzujemy:\n\n✅ Rezerwacje online 24/7\n✅ Przypomnienia SMS przed wizytą\n✅ Historia klientów i preferencje\n✅ Program lojalnościowy\n✅ Zarządzanie produktami\n\nZwiększasz rezerwacje o 40%! 📈',
+                    'Salon beauty to nasza specjalność! 💇\n\n📅 Rezerwacje bez telefonu\n📱 Auto-SMS przypomnienia\n💎 Program punktowy dla klientów\n📊 Statystyki wizyt\n\nChcesz darmową wersję demo?'
+                ],
+                quickReplies: ['Demo', 'Ile kosztuje?', 'Jak to działa?']
+            },
+            sklep: {
+                keywords: ['sklep', 'e-commerce', 'sprzedaż', 'online', 'ecommerce'],
+                answers: [
+                    'Dla e-commerce automatyzujemy:\n\n✅ Obsługę zamówień\n✅ Integrację z hurtowniami\n✅ Email marketing (3000+ dziennie)\n✅ Zwroty i reklamacje\n✅ Raporty sprzedażowe\n\nDo 90% procesów na autopilocie! 🚀',
+                    'Sklep online? Mamy dla Ciebie:\n\n🛒 Auto-realizacja zamówień\n💳 Integracja płatności\n📦 Śledzenie wysyłek\n📧 Auto-kampanie email\n\nZwrot z inwestycji w 6 tygodni!'
+                ],
+                quickReplies: ['Integracje', 'ROI calculator', 'Cennik']
+            },
+            kontakt: {
+                keywords: ['kontakt', 'telefon', 'email', 'umów', 'spotkanie', 'konsultacja'],
+                answers: [
+                    'Skontaktuj się z nami! 📞\n\n📱 +49 1521 250 186\n📱 +48 791 368 767\n✉️ lukson.lj@gmail.com\n\n⏰ Pon-Pt: 9:00-18:00\n⏰ Sob: 10:00-14:00\n\nBezpłatna konsultacja - 30 minut!',
+                    'Chętnie porozmawiamy! 🤝\n\nZadzwoń:\n+49 1521 250 186\n+48 791 368 767\n\nLub napisz:\nlukson.lj@gmail.com\n\nOdpowiadamy w 2h! Umówić callback?'
+                ],
+                quickReplies: ['Zadzwońcie do mnie', 'Wyślij email', 'Formularz kontaktowy']
+            },
+            czas: {
+                keywords: ['jak długo', 'ile czasu', 'kiedy', 'termin', 'realizacja'],
+                answers: [
+                    'Czas realizacji zależy od pakietu:\n\n⚡ Starter: 1-2 tygodnie\n⚡ Business: 2-4 tygodnie\n⚡ Enterprise: 4-8 tygodni\n\nWdrożenie krok po kroku, bez przestojów w Twojej firmie!',
+                    'Standardowo:\n\n✅ Analiza potrzeb: 2-3 dni\n✅ Projektowanie: 3-5 dni\n✅ Wdrożenie: 7-14 dni\n✅ Szkolenie: 1 dzień\n\nŁącznie 2-3 tygodnie! Masz pilną sprawę?'
+                ],
+                quickReplies: ['Pilne wdrożenie', 'Standardowy termin', 'Elastyczny plan']
+            },
+            default: {
+                answers: [
+                    'Ciekawe pytanie! 🤔 Mogę Ci pomóc z:\n\n💰 Cennikiem\n🔧 Rozwiązaniami dla Twojej branży\n📞 Umówieniem konsultacji\n⏰ Czasem wdrożenia\n\nO co chcesz zapytać?',
+                    'Hmm, nie jestem pewien czy dobrze zrozumiałem. Mogę pomóc z:\n\n• Cenami i pakietami\n• Automatyzacją dla stolarni, salonu, sklepu\n• Umówieniem bezpłatnej konsultacji\n• Obliczeniem ROI\n\nCzym się interesujesz?',
+                    'Jestem tu aby pomóc! 😊 Najczęściej pytają o:\n\n1️⃣ Cennik i koszty\n2️⃣ Rozwiązania dla konkretnej branży\n3️⃣ Czas wdrożenia\n4️⃣ Kontakt z ekspertem\n\nWybierz temat!'
+                ],
+                quickReplies: ['Cennik', 'Moja branża', 'Kontakt', 'Case studies']
+            }
+        };
+
+        // Find best matching response
+        function getBotResponse(userMessage) {
+            const msg = userMessage.toLowerCase().trim();
+            
+            // Check each category
+            for (const [category, data] of Object.entries(responses)) {
+                if (category === 'default') continue;
+                
+                const matched = data.keywords.some(keyword => msg.includes(keyword));
+                if (matched) {
+                    const randomAnswer = data.answers[Math.floor(Math.random() * data.answers.length)];
+                    return {
+                        text: randomAnswer,
+                        quickReplies: data.quickReplies || []
+                    };
+                }
+            }
+            
+            // Default response
+            const randomDefault = responses.default.answers[Math.floor(Math.random() * responses.default.answers.length)];
+            return {
+                text: randomDefault,
+                quickReplies: responses.default.quickReplies
+            };
+        }
+
+        // Add message to chat
+        function addMessage(text, sender, quickReplies = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            
+            // Add quick replies for bot messages
+            if (sender === 'bot' && quickReplies.length > 0) {
+                const quickRepliesDiv = document.createElement('div');
+                quickRepliesDiv.className = 'quick-replies';
+                
+                quickReplies.forEach(reply => {
+                    const button = document.createElement('button');
+                    button.className = 'quick-reply';
+                    button.textContent = reply;
+                    button.onclick = () => {
+                        chatInput.value = reply;
+                        sendMessage();
+                    };
+                    quickRepliesDiv.appendChild(button);
+                });
+                
+                chatMessages.appendChild(quickRepliesDiv);
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate thinking time
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                
+                // Get and add bot response
+                const response = getBotResponse(message);
+                addMessage(response.text, 'bot', response.quickReplies);
+            }, 1000 + Math.random() * 1000); // 1-2 seconds delay
+        }
+
+        // Event listeners
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Scroll Animation for Cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.case-card, .pricing-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+
+        // Show welcome quick replies after 3 seconds
+        setTimeout(() => {
+            if (chatMessages.children.length === 1) {
+                const welcomeQuickReplies = document.createElement('div');
+                welcomeQuickReplies.className = 'quick-replies';
+                welcomeQuickReplies.style.animation = 'messageSlide 0.3s';
+                
+                ['Ile kosztuje?', 'Jestem stolarzem', 'Mam salon', 'Prowadzę sklep'].forEach(text => {
+                    const button = document.createElement('button');
+                    button.className = 'quick-reply';
+                    button.textContent = text;
+                    button.onclick = () => {
+                        chatInput.value = text;
+                        sendMessage();
+                    };
+                    welcomeQuickReplies.appendChild(button);
+                });
+                
+                chatMessages.appendChild(welcomeQuickReplies);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
